@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="SimpleBot">
+
+  <!-- The definition of colors used in this urdf -->
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+
+  <!-- Property values used in this model -->
+  <xacro:property name="M_PI" value="3.1415926535897931"/>
+
+  <!--
+  This is the main link of the robot. usually it is chosen to be the centre
+  point of the robot.
+  -->
+  <link name="base_link">
+    <!-- Inertia is used to simulate the physics of the robot in simulator -->
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <!--
+      This is the most tricly part. It can be calculated using a mesh and
+      programs such as MeshLab. If you get these values totally wrong your robot
+      might just explode of fly away in the simulator.
+      -->
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <!--
+    Collisions are used in simulation as well. They help to determine when the
+    robot starts touching some other surface. This requires some heavy maths so
+    collision objects should be as simple as possible. Ideally they should only
+    be primitive shapes such as box, cylinder and sphere.
+    -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.7 0.2 0.075"/>
+      </geometry>
+    </collision>
+    <!--
+    This is only used for visualization purposes. This can be a 3D CAD model of
+    your robot.
+  -->
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.7 0.2 0.075"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <!--
+  Macro defining robot wheel. This macro can be used to initialize multiple
+  wheels. Macros can have parameters that make it possible to change the behaviour
+  of the actual URDF xml that is going to be generated when this macro is instantiated
+  -->
+  <xacro:macro name="wheel" params="side side_ind">
+    <!--
+    Each new robot part should have its own link. These links have the same
+    fields as the base_link link.
+    -->
+    <link name="${side}_wheel">
+      <inertial>
+        <mass value="0.5"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+      </inertial>
+      <collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.075" length="0.05"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.075" length="0.05"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+    </link>
+    <!--
+    Joints are used to connect links together. There are several type of joints
+    that we can have. The most common are revolute and continuous. You can read
+    more about them in URDF documentation.
+    -->
+    <joint name="${side}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${side}_wheel"/>
+      <xacro:if value="${side_ind}">
+        <origin xyz="0.35 0.125 0" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:if value="${not side_ind}">
+        <origin xyz="0.35 -0.125 0" rpy="0 0 0"/>
+      </xacro:if>
+      <axis xyz="0 1 0"/>
+    </joint>
+    <!--
+    Transmissions are used by ros_control. They are necessary so that we can
+    simulate joints that are then controlled by ros_control controllers
+    -->
+    <transmission name="${side}_wheel_tran">
+      <!--
+      Type of transmission. These can be more sophisticated. Have a look at
+      documentation to get more info on this.
+      -->
+      <type>transmission_interface/SimpleTransmission</type>
+      <!--
+      This should be the same as the joint that you defined above. Again joints
+      can be controlled in several ways. For example, we can have velocity,
+      position or effort controlled joints. This depends on the motor controller
+      that is used in the robot.
+      -->
+      <joint name="${side}_wheel_joint">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+      <!--
+      Actuator is the same as the actual motor that rotates the joint. The gear
+      ration can be specified in mechanicalReduction parameter.
+      -->
+      <actuator name="${side}_wheel_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+  <!--
+  Here you actually declare the wheels. This is the initialization of the macro
+  that we declared above. We also give different parameters for each wheel
+  -->
+  <xacro:wheel side="left" side_ind="1"/>
+  <xacro:wheel side="right" side_ind="0"/>
+
+</robot>

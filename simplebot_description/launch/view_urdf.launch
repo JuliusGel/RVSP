@@ -1,0 +1,14 @@
+<launch>
+  <!--
+  We first convert our robot_description from xacro to urdf. This urdf is then
+  loaded into ros parameter robot_description.
+  -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find simplebot_description)/urdf/simplebot.urdf.xacro'" />
+
+  <!--
+  We now start two nodes. robot_state_publisher is used to publish robot joint
+  states to TF. rviz is ros 3D tool used to visualize various robot sensor data.
+  -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find simplebot_description)/config/view_urdf.rviz" required="true" />
+</launch>
