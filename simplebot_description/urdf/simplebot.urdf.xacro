@@ -134,4 +134,9 @@
   <xacro:wheel side="left" side_ind="1"/>
   <xacro:wheel side="right" side_ind="0"/>
 
+  <!-- ros_control plugin for simulated robot -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so" />
+  </gazebo>
+
 </robot>

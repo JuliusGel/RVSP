@@ -6,9 +6,17 @@
   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find simplebot_description)/urdf/simplebot.urdf.xacro'" />
 
   <!--
-  We now start two nodes. robot_state_publisher is used to publish robot joint
-  states to TF. rviz is ros 3D tool used to visualize various robot sensor data.
+  We now start three nodes.
+  joint_state_publisher is a package that is needed only when you do not have
+  the real robot. This node publishes joint_states topic. This topic is needed so
+  that robot_state_publisher can publish states of all joints to TF.
+  robot_state_publisher is used to publish robot joint states to TF. All the static
+  joints are published as is and moving joint angles are taken from joint_states
+  topic that is provided by joint_state_publisher. NOTE that joint_state_publisher
+  is only needed when we do not have the real (simulated) robot.
+  rviz is ros 3D tool used to visualize various robot sensor data.
   -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find simplebot_description)/config/view_urdf.rviz" required="true" />
 </launch>

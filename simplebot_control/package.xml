@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>simplebot_control</name>
+  <version>1.0.0</version>
+  <description>The simplebot_control package that contins the controller configurations and launch files</description>
+
+  <maintainer email="julius.gelsvartas@gmail.com">Julius Gelsvartas</maintainer>
+  <author email="julius.gelsvartas@gmail.com">Julius Gelsvartas</author>
+
+  <license>Apache 2.0</license>
+  <url type="website">https://github.com/JuliusGel/RVSP</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>
