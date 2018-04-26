@@ -1,0 +1,12 @@
+<launch>
+  <!-- Run the robot simulation file that we previously created -->
+  <include file="$(find simplebot_control)/launch/simplebot_controllers.launch"/>
+
+  <!--
+  Start the node that follows the the wall
+  -->
+  <node name="follower" pkg="follow_wall" type="follow_node" output="screen">
+    <!-- remap can be used to change the topic name of compiled node at runtime -->
+    <remap from="cmd_vel" to="/simplebot_controller/cmd_vel"/>
+  </node>
+</launch>

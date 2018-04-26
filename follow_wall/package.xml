@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>follow_wall</name>
+  <version>1.0.0</version>
+  <description>This package implements a node for a robot to follow a wall</description>
+
+  <maintainer email="julius.gelsvartas@gmail.com">Julius Gelsvartas</maintainer>
+  <author email="julius.gelsvartas@gmail.com">Julius Gelsvartas</author>
+
+  <license>Apache 2.0</license>
+  <url type="website">https://github.com/JuliusGel/RVSP</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>
