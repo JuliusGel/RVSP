@@ -3,10 +3,7 @@
   <!-- Load the environment for simulation -->
   <!-- Here you can give a different world_name to load different environments -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <!--
-    NOTE: Uncomment this to launch a different world
-    <arg name="world_name" value="$(find simplebot_gazebo)/worlds/YOUR_WORLD.world""/>
-    -->
+    <arg name="world_name" value="$(find simplebot_description)/model/wall.world"/>
     <arg name="paused" value="false"/>
   </include>
 

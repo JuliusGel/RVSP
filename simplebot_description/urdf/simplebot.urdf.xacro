@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="SimpleBot">
 
+  <!-- Include the file that contains sonar description. -->
+  <xacro:include filename="$(find hector_sensors_description)/urdf/sonar_sensor.urdf.xacro" />
+
   <!-- The definition of colors used in this urdf -->
   <material name="white">
     <color rgba="1 1 1 1"/>
@@ -139,4 +142,74 @@
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so" />
   </gazebo>
 
+  <!--Caster wheel of the robot  -->
+  <link name="caster_link">
+    <visual>
+      <origin rpy="1.0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.075"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.075"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_link"/>
+    <origin rpy="0 0 0" xyz="-0.35 0 0"/>
+  </joint>
+  <gazebo reference="caster_link">
+    <turnGravityOff>false</turnGravityOff>
+    <mu1 value="0.0"/>
+    <mu2 value="0.0"/>
+  </gazebo>
+
+  <!-- Sonar sensor facing forward -->
+  <xacro:sonar_sensor
+    name="front_sonar"
+    parent="base_link"
+    ros_topic="front_sonar"
+    update_rate="10"
+    min_range="0.01"
+    max_range="5.00"
+    field_of_view="${5*pi/180}"
+    ray_count="3">
+    <origin xyz="0.35 0 0.15" rpy="0 0 0"/>
+  </xacro:sonar_sensor>
+
+  <!-- Sonar sensor facing to the left -->
+  <xacro:sonar_sensor
+    name="left_sonar"
+    parent="base_link"
+    ros_topic="left_sonar"
+    update_rate="10"
+    min_range="0.01"
+    max_range="5.00"
+    field_of_view="${5*pi/180}"
+    ray_count="3">
+    <origin xyz="0.35 0 0.15" rpy="0 0 ${M_PI/2}"/>
+  </xacro:sonar_sensor>
+
+  <!-- Sonar sensor facing to the right -->
+  <xacro:sonar_sensor
+    name="righ_sonar"
+    parent="base_link"
+    ros_topic="right_sonar"
+    update_rate="10"
+    min_range="0.01"
+    max_range="5.00"
+    field_of_view="${5*pi/180}"
+    ray_count="3">
+    <origin xyz="0.35 0 0.15" rpy="0 0 -${M_PI/2}"/>
+  </xacro:sonar_sensor>
 </robot>
