@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
     // create new robot control command and fill it with your values
     geometry_msgs::Twist msg;
-    msg.linear.x = 0.0; //TODO: fill this in wiht your value
+    msg.linear.x = 1.0; //TODO: fill this in wiht your value
     msg.angular.z = 0.0; //TODO: fill this in wiht your value
 
     ROS_DEBUG_STREAM("You created following robot command:" << msg);
