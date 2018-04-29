@@ -1,0 +1,17 @@
+<launch>
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <!-- common configuration for both global and local costmaps -->
+    <rosparam file="$(find simplebot_navigation)/config/costmap_common.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find simplebot_navigation)/config/costmap_common.yaml" command="load" ns="local_costmap"/>
+    <!-- the configuration that is separate for the global and local cost maps -->
+    <rosparam file="$(find simplebot_navigation)/config/costmap_global_odom.yaml" command="load"/>
+    <rosparam file="$(find simplebot_navigation)/config/costmap_local.yaml" command="load"/>
+
+    <!-- the configuration of the planners -->
+    <rosparam file="$(find simplebot_navigation)/config/teb_local_planner.yaml" command="load"/>
+    <rosparam file="$(find simplebot_navigation)/config/global_planner.yaml" command="load"/>
+
+    <!-- The velocity command that is send to the robot controller -->
+    <remap from="cmd_vel" to="/simplebot_controller/cmd_vel"/>
+  </node>
+</launch>

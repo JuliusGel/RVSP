@@ -1,0 +1,7 @@
+<launch>
+  <!-- Run the robot simulation file that we previously created -->
+  <include file="$(find simplebot_control)/launch/simplebot_controllers.launch"/>
+
+  <!-- Start the move_base_local file that runs the navigation stack -->
+  <include file="$(find simplebot_navigation)/launch/move_base_local.launch"/>
+</launch>

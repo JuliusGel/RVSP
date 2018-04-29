@@ -1,0 +1,37 @@
+footprint: [[0.45, 0.3], [0.45, -0.3], [-0.45, -0.3], [-0.45, 0.3]]
+footprint_padding: 0.03
+robot_base_frame: base_link
+
+publish_frequency: 1.0
+transform_tolerance: 0.5
+
+inflation_layer:
+  cost_scaling_factor: 8.0
+  inflation_radius: 1.5
+
+#parameters of the obstacles costmap
+obstacles:
+  observation_sources:  front_laser back_laser
+  track_unknown_space: true
+  front_laser: {
+    data_type: LaserScan,
+    sensor_frame: /front_laser_link,
+    topic: /front_laser/front_scan,
+    marking: true,
+    clearing: true,
+    expected_update_rate: 0.1,
+    inf_is_valid: true,
+    obstacle_range: 15.0,
+    raytrace_range: 20.0
+    }
+  back_laser: {
+    data_type: LaserScan,
+    sensor_frame: /back_laser_link,
+    topic: /back_laser/back_scan,
+    marking: true,
+    clearing: true,
+    expected_update_rate: 0.1,
+    inf_is_valid: true,
+    obstacle_range: 15.0,
+    raytrace_range: 20.0
+    }

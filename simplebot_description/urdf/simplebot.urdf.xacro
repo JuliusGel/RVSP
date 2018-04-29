@@ -212,4 +212,69 @@
     ray_count="3">
     <origin xyz="0.35 0 0.15" rpy="0 0 -${M_PI/2}"/>
   </xacro:sonar_sensor>
+
+  <!-- Macro defining hokuyo lidar units -->
+  <xacro:macro name="hokuyo_lidar" params="side x y z yaw">
+    <!-- Lidar link -->
+    <link name="${side}_laser_link">
+      <collision>
+        <origin xyz="0 0 -0.0225" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.05 0.05 0.07"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 0 -0.0225" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.05 0.05 0.07"/>
+        </geometry>
+        <material name="white"/>
+      </visual>
+    </link>
+    <!-- Joint connecting lidar to base_link -->
+    <joint name="${side}_laser_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${side}_laser_link"/>
+      <origin xyz="${x} ${y} ${z}" rpy="0 0 ${yaw}"/>
+    </joint>
+    <!-- Gazebo tag describing how the lidar is simulated in Gazebo -->
+    <gazebo reference="${side}_laser_link">
+      <sensor name="${side}_laser" type="ray">
+        <pose>0 0 0 0 0 0</pose>
+        <ray>
+          <scan>
+            <horizontal>
+              <!-- The URG-04LX-UG01  has  683 steps with 0.35139 Degree resolution -->
+              <resolution>1</resolution>
+              <max_angle>2.0944</max_angle>
+              <!-- 120 Degree -->
+              <min_angle>-2.0944</min_angle>
+              <!-- -120 Degree -->
+              <samples>683</samples>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.2</min>
+            <max>20</max>
+            <resolution>0.01</resolution>
+          </range>
+        </ray>
+
+        <plugin name="${side}_laser" filename="libgazebo_ros_laser.so">
+          <topicName>${side}_laser/${side}_scan</topicName>
+          <frameName>${side}_laser_link</frameName>
+        </plugin>
+
+        <always_on>1</always_on>
+        <update_rate>10</update_rate>
+        <!-- You can change this property to true to visualize lidar rays in Gazebo -->
+        <visualize>false</visualize>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Now we actually create two lidar instances that are added to our robot -->
+  <xacro:hokuyo_lidar side="front" x="0.35" y="0" z="0.15" yaw="0"/>
+  <xacro:hokuyo_lidar side="back" x="-0.35" y="0" z="0.15" yaw="${M_PI}"/>
+
 </robot>
