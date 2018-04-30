@@ -1,36 +1,57 @@
+# describes robot boundaries as a polygon
 footprint: [[0.45, 0.3], [0.45, -0.3], [-0.45, -0.3], [-0.45, 0.3]]
+# describes how much the footprint should b increased when avoiding obstacles
 footprint_padding: 0.03
+# the name of robot base_link frame
 robot_base_frame: base_link
 
+# how often to send constmap to rviz for visualization
 publish_frequency: 1.0
+# the maximal time between transform messages
 transform_tolerance: 0.5
 
+# the parameters of the costmap inflation layer plugin
 inflation_layer:
+  # how fast cost decreases after inflation radius
   cost_scaling_factor: 8.0
+  # the radius that is used when inflating obstacles
   inflation_radius: 1.5
 
-#parameters of the obstacles costmap
+# parameters of the obstacles costmap
 obstacles:
+  # list of sensors used for obstacle avoidance
   observation_sources:  front_laser back_laser
+  # indicates that unknown space should be tracked
   track_unknown_space: true
+  # the parameters of first observation source
   front_laser: {
+    # data source type (type of sensor)
     data_type: LaserScan,
+    # sensor message frame id
     sensor_frame: /front_laser_link,
+    # sensor message topic
     topic: /front_laser/front_scan,
+    # indicates that sensor can add new obstacles
     marking: true,
+    # indicates that this sensor can remove obstacles
     clearing: true,
-    expected_update_rate: 0.1,
+    # how often we expect to receive sensor messages (shoud increase in slower computers)
+    expected_update_rate: 0.2,
+    # indicates that infinity measurements are valid
     inf_is_valid: true,
+    # how far can the furthes obstacle be
     obstacle_range: 15.0,
+    # how far to raytrace when removing obstacles
     raytrace_range: 20.0
     }
+  # the parameters of second sensor (parameter meaning is the same)
   back_laser: {
     data_type: LaserScan,
     sensor_frame: /back_laser_link,
     topic: /back_laser/back_scan,
     marking: true,
     clearing: true,
-    expected_update_rate: 0.1,
+    expected_update_rate: 0.2,
     inf_is_valid: true,
     obstacle_range: 15.0,
     raytrace_range: 20.0

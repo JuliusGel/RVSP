@@ -1,18 +1,25 @@
 global_costmap:
+  # indicates that map is not changing its position with robot
   static_map: true
+  # should be opposite of the above
   rolling_window: false
 
+  # the global frame id of this costmap, we are only navigating in odom frame with
+  # no map therfore this is set to odom. It should be set to /map otherwise
   global_frame: /odom
 
+  # update rate of this costmap
   update_frequency: 3.0
-  publish_voxel_map: true
 
+  # patameters that determine the size of this map
   width: 30.0
   height: 30.0
   resolution: 0.2
   origin_x: -15.0
   origin_y: -15.0
 
+  # the plugins that are used by this costmap. Note that parameters of these plugins
+  # can be found in costmap_common.yaml file!
   plugins:
     - {name: obstacles,       type: "costmap_2d::ObstacleLayer"}
     - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
