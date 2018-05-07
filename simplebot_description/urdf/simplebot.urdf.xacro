@@ -277,4 +277,34 @@
   <xacro:hokuyo_lidar side="front" x="0.35" y="0" z="0.15" yaw="0"/>
   <xacro:hokuyo_lidar side="back" x="-0.35" y="0" z="0.15" yaw="${M_PI}"/>
 
+  <!-- Here we create necessary links and joints of IMU device -->
+  <link name="imu_link"/>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </joint>
+  <gazebo>
+    <!-- Plugin that simulates IMU device in Gazebo -->
+    <plugin name="imu_sim" filename="libhector_gazebo_ros_imu.so">
+      <serviceName>/imu/calibrate</serviceName>
+      <updateRate>200.0</updateRate>
+      <bodyName>imu_link</bodyName>
+      <frameId>imu_link</frameId>
+      <topicName>imu_data</topicName>
+      <rpyOffset>0 0 0</rpyOffset>
+      <xyzOffset>0 0 0</xyzOffset>
+      <gaussianNoise>0.00000001</gaussianNoise>
+      <accelDrift>0.00000001 0.00000001 0.00000001</accelDrift>
+      <accelDriftFrequency>0.00000001 0.00000001 0.00000001</accelDriftFrequency>
+      <accelGaussianNoise>0.00000001 0.00000001 0.00000001</accelGaussianNoise>
+      <rateDrift>0.0 0.0 0.0</rateDrift>
+      <rateDriftFrequency>0.0 0.0 0.0</rateDriftFrequency>
+      <rateGaussianNoise>0.0 0.0 0.0</rateGaussianNoise>
+      <headingDrift>0.0 0.0 0.0</headingDrift>
+      <headingDriftFrequency>0.0 0.0 0.0</headingDriftFrequency>
+      <headingGaussianNoise>0.0 0.0 0.0</headingGaussianNoise>
+    </plugin>
+  </gazebo>
+
 </robot>
