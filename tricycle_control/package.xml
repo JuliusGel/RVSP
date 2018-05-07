@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>tricycle_control</name>
+  <version>1.0.0</version>
+  <description>The package that contins the controller of tricycle robot</description>
+
+  <maintainer email="julius.gelsvartas@gmail.com">Julius Gelsvartas</maintainer>
+  <author email="julius.gelsvartas@gmail.com">Julius Gelsvartas</author>
+
+  <license>Apache 2.0</license>
+  <url type="website">https://github.com/JuliusGel/RVSP</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>controller_interface</depend>
+
+  <exec_depend>ros_controllers</exec_depend>
+
+  <export>
+    <controller_interface plugin="${prefix}/control_plugins.xml" />
+  </export>
+</package>

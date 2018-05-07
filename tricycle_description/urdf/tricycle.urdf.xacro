@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="TriCycle">
+
+  <!-- The definition of colors used in this urdf -->
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+
+  <!-- Property values used in this model -->
+  <xacro:property name="M_PI" value="3.1415926535897931"/>
+
+  <!--
+  This is the main link of the robot. usually it is chosen to be the centre
+  point of the robot.
+  -->
+  <link name="base_link">
+    <!-- Inertia is used to simulate the physics of the robot in simulator -->
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <!--
+      This is the most tricly part. It can be calculated using a mesh and
+      programs such as MeshLab. If you get these values totally wrong your robot
+      might just explode of fly away in the simulator.
+      -->
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <!--
+    Collisions are used in simulation as well. They help to determine when the
+    robot starts touching some other surface. This requires some heavy maths so
+    collision objects should be as simple as possible. Ideally they should only
+    be primitive shapes such as box, cylinder and sphere.
+    -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.7 0.3 0.075"/>
+      </geometry>
+    </collision>
+    <!--
+    This is only used for visualization purposes. This can be a 3D CAD model of
+    your robot.
+    -->
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.7 0.3 0.075"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <!--
+  The rotation axel of the tricycle
+  -->
+  <link name="rot_axel_link">
+    <inertial>
+      <mass value="0.5"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="rot_axel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="rot_axel_link"/>
+    <origin xyz="0.35 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <transmission name="rot_axel_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="rot_axel_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="rot_axel_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Front wheel of the tricycle -->
+  <link name="front_wheel">
+    <inertial>
+      <mass value="0.5"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+      <geometry>
+        <cylinder radius="0.075" length="0.02"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+      <geometry>
+        <cylinder radius="0.075" length="0.02"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+  <joint name="front_wheel_joint" type="continuous">
+    <parent link="rot_axel_link"/>
+    <child link="front_wheel"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <transmission name="front_wheel_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="front_wheel_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="front_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- ros_control plugin for simulated robot -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so" />
+  </gazebo>
+
+  <!--Left caster wheel of the robot  -->
+  <link name="left_caster_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.075"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.075"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="left_caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_caster_link"/>
+    <origin rpy="0 0 0" xyz="-0.35 0.15 0"/>
+  </joint>
+  <gazebo reference="left_caster_link">
+    <turnGravityOff>false</turnGravityOff>
+    <mu1 value="0.0"/>
+    <mu2 value="0.0"/>
+  </gazebo>
+
+  <!--Right caster wheels of the robot  -->
+  <link name="right_caster_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.075"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.075"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="right_caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_caster_link"/>
+    <origin rpy="0 0 0" xyz="-0.35 -0.15 0"/>
+  </joint>
+  <gazebo reference="right_caster_link">
+    <turnGravityOff>false</turnGravityOff>
+    <mu1 value="0.0"/>
+    <mu2 value="0.0"/>
+  </gazebo>
+
+</robot>

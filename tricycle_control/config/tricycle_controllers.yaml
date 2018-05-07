@@ -1,0 +1,29 @@
+# We will load two controllers here.
+#
+# First controller (joint_state_controller) takes the joint states from
+# Gazebo simulator and publishes them to /joint_states topic. This information
+# is used to determine the position of each joint at any given point in time.
+# When we viewed URDF before joint_state_publisher node was used to publish these
+# states but they were static and did not change over time. Now we want to get the
+# actual joint states from simulated robot. In a real robot you would have to
+# implement RobotHardwareInterface class that reads these states from real robot.
+#
+# Second controller (simplebot_controller) is a diff_drive_controller. It takes
+# as an input a Twist message. This message contains the velocity of robot center
+# point around various axis (x, y, theta). It than converts this information into
+# a velocity for each of your robot wheel. In addition it takes the state of each
+# of your robots joints and calculates the odometry of your robot.
+
+# this first line is the name of the controller. It can be arbitrary and you decide
+# how to call your controllers.
+joint_state_controller:
+  # this defines the actual type of the loaded controller.
+  type          : joint_state_controller/JointStateController
+  # the following are all the parameters of your controller. You can read about
+  # the parameters that your controller has in its documentation page
+  publish_rate  : 80
+
+# our second robot controller
+tricycle_controller:
+  # its type is a tricycle_controller
+  type                          : tricycle_controller/TricycleController

@@ -1,0 +1,17 @@
+<launch>
+
+  <!-- Load the environment for simulation -->
+  <!-- Here you can give a different world_name to load different environments -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="false"/>
+  </include>
+
+  <!-- The URDF of the robot -->
+  <param name="robot_description"
+           command="$(find xacro)/xacro --inorder
+                   '$(find tricycle_description)/urdf/tricycle.urdf.xacro'" />
+
+  <!-- Spawn your robot in Gazebo simulator -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" args="-urdf -x 0 -y 0 -z 0.075 -param robot_description -model TriCycle"/>
+
+</launch>
