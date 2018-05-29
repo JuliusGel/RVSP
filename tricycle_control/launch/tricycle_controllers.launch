@@ -15,5 +15,5 @@
   This node loads all robot controllers. The names of the controllers should
   match the names you give to each controller in the yaml file.
   -->
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" args="joint_state_controller tricycle_controller"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" args="joint_state_controller tricycle_controller" output="screen"/>
 </launch>

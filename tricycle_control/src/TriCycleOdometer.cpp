@@ -20,6 +20,16 @@ TriCycleOdometer::TriCycleOdometer(hardware_interface::VelocityJointInterface* _
   ROS_DEBUG_STREAM("TriCycleOdometer::TriCycleOdometer");
 
   m_publishPeriod = ros::Duration(1 / 20);
+
+  m_odomPub.reset(new realtime_tools::RealtimePublisher<nav_msgs::Odometry>(_controllerNh, "odom", 100));
+  m_odomPub->msg_.header.frame_id = "odom";
+  m_odomPub->msg_.child_frame_id = "base_link";
+  m_odomPub->msg_.pose.pose.position.z = 0;
+  m_odomPubTf.reset(new realtime_tools::RealtimePublisher<tf::tfMessage>(_rootNh, "/tf", 100));
+  m_odomPubTf->msg_.transforms.resize(1);
+  m_odomPubTf->msg_.transforms[0].transform.translation.z = 0.0;
+  m_odomPubTf->msg_.transforms[0].child_frame_id = "base_link";
+  m_odomPubTf->msg_.transforms[0].header.frame_id = "odom";
 }
 
 TriCycleOdometer::~TriCycleOdometer()
@@ -41,6 +51,7 @@ void TriCycleOdometer::init(const ros::Time& _time)
 
 void TriCycleOdometer::update(const ros::Time& _time, const ros::Duration& _period)
 {
+  ROS_DEBUG_STREAM("TriCycleOdometer::update");
   //////////////////////////////////////////////////////////////////////////////
   // TODO calculate and set odomX etc. here
   //////////////////////////////////////////////////////////////////////////////

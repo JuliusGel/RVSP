@@ -33,6 +33,8 @@ bool TriCycleController::init(hardware_interface::VelocityJointInterface* _hw,
 
 void TriCycleController::update(const ros::Time& _time, const ros::Duration& _period)
 {
+  ROS_DEBUG_STREAM("Controller::update");
+
   // compute and publish the odometry of the robot
   m_odometer->update(_time, _period);
 
